@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "@alch/alchemy-web3": "^1.4.2",
+    "@openzeppelin/contracts": "^4.6.0",
+    "dotenv": "^16.0.1",
+    "solc": "^0.8.9",
+    "web4": "^1.0.0"
+  },
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.6",
+    "@nomiclabs/hardhat-etherscan": "^3.0.3",
+    "@nomiclabs/hardhat-web3": "^2.0.0",
+    "ethers": "^5.6.7",
+    "hardhat": "^2.9.6",
+    "node-fetch": "^2.6.7",
+    "web3": "^1.7.3"
+  }
+}

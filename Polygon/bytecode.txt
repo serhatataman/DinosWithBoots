@@ -1,0 +1,1028 @@
+# Palkeoramix decompiler. 
+
+const TOTAL_SUPPLY = 10000
+
+def storage:
+  stor0 is array of struct at storage 0
+  stor1 is array of struct at storage 1
+  ownerOf is mapping of addr at storage 2
+  balanceOf is mapping of uint256 at storage 3
+  approved is mapping of addr at storage 4
+  stor5 is mapping of uint8 at storage 5
+  owner is addr at storage 6
+  stor7 is uint256 at storage 7
+  stor8 is array of struct at storage 8
+
+def getApproved(uint256 _tokenId): # not payable
+  require calldata.size - 4 >=ΓÇ▓ 32
+  require _tokenId == _tokenId
+  if not ownerOf[_tokenId]:
+      revert with 0x8c379a000000000000000000000000000000000000000000000000000000000, 'ERC721: approved query for nonexistent token'
+  return approved[_tokenId]
+
+def ownerOf(uint256 _tokenId): # not payable
+  require calldata.size - 4 >=ΓÇ▓ 32
+  require _tokenId == _tokenId
+  if not ownerOf[_tokenId]:
+      revert with 0x8c379a000000000000000000000000000000000000000000000000000000000, 'ERC721: owner query for nonexistent token'
+  return ownerOf[_tokenId]
+
+def balanceOf(address _owner): # not payable
+  require calldata.size - 4 >=ΓÇ▓ 32
+  require _owner == _owner
+  if not _owner:
+      revert with 0x8c379a000000000000000000000000000000000000000000000000000000000, 'ERC721: balance query for the zero address'
+  return balanceOf[addr(_owner)]
+
+def owner(): # not payable
+  return owner
+
+#
+#  Regular functions
+#
+
+def _fallback() payable: # default function
+  revert
+
+def isApprovedForAll(address _owner, address _operator): # not payable
+  require calldata.size - 4 >=ΓÇ▓ 64
+  require _owner == _owner
+  require _operator == _operator
+  if _operator - 0x58807bad0b376efc12f5ad86aac70e78ed67deae:
+      return bool(stor5[addr(_owner)][addr(_operator)])
+  return 1
+
+def payments(address _dest): # not payable
+  require calldata.size - 4 >=ΓÇ▓ 32
+  require _dest == _dest
+  static call 0x1d5374150448ecb97e74a248a29c334e18c98e2.depositsOf(address depositer) with:
+          gas gas_remaining wei
+         args _dest
+  if not ext_call.success:
+      revert with ext_call.return_data[0 len return_data.size]
+  require return_data.size >=ΓÇ▓ 32
+  require ext_call.return_data == ext_call.return_data[0]
+  return ext_call.return_data[0]
+
+def supportsInterface(bytes4 _interfaceId): # not payable
+  require calldata.size - 4 >=ΓÇ▓ 32
+  require _interfaceId == Mask(32, 224, _interfaceId)
+  if Mask(32, 224, _interfaceId) == 0x80ac58cd00000000000000000000000000000000000000000000000000000000:
+      return True
+  if Mask(32, 224, _interfaceId) == 0x5b5e139f00000000000000000000000000000000000000000000000000000000:
+      return True
+  return (Mask(32, 224, _interfaceId) == 0x1ffc9a700000000000000000000000000000000000000000000000000000000)
+
+def renounceOwnership(): # not payable
+  if caller - this.address:
+      if owner != caller:
+          revert with 0, 'Ownable: caller is not the owner'
+  else:
+      mem[96] = calldata.size
+      mem[128 len calldata.size] = call.data[0 len calldata.size]
+      if owner != mem[calldata.size + 108 len 20]:
+          revert with 0, 'Ownable: caller is not the owner'
+  owner = 0
+  log OwnershipTransferred(
+        address previousOwner=owner,
+        address newOwner=0)
+
+def withdrawPayments(address _payee): # not payable
+  require calldata.size - 4 >=ΓÇ▓ 32
+  require _payee == _payee
+  if caller - this.address:
+      if owner != caller:
+          revert with 0, 'Ownable: caller is not the owner'
+  else:
+      mem[96] = calldata.size
+      mem[128 len calldata.size] = call.data[0 len calldata.size]
+      if owner != mem[calldata.size + 108 len 20]:
+          revert with 0, 'Ownable: caller is not the owner'
+  require ext_code.size(0x1d5374150448ecb97e74a248a29c334e18c98e2)
+  call 0x01d5374150448ecb97e74a248a29c334e18c98e2.withdraw(address recipient) with:
+       gas gas_remaining wei
+      args _payee
+  if not ext_call.success:
+      revert with ext_call.return_data[0 len return_data.size]
+
+def transferOwnership(address _newOwner): # not payable
+  require calldata.size - 4 >=ΓÇ▓ 32
+  require _newOwner == _newOwner
+  if caller - this.address:
+      if owner != caller:
+          revert with 0, 'Ownable: caller is not the owner'
+      if not _newOwner:
+          revert with 0x8c379a000000000000000000000000000000000000000000000000000000000, 'Ownable: new owner is the zero address'
+  else:
+      mem[96] = calldata.size
+      mem[128 len calldata.size] = call.data[0 len calldata.size]
+      if owner != mem[calldata.size + 108 len 20]:
+          revert with 0, 'Ownable: caller is not the owner'
+      if not _newOwner:
+          revert with 0, 'Ownable: new owner is the zero address'
+  ('bool', ('param', '_newOwner'))
+  owner = _newOwner
+  log OwnershipTransferred(
+        address previousOwner=owner,
+        address newOwner=_newOwner)
+
+def setApprovalForAll(address _to, bool _approved): # not payable
+  require calldata.size - 4 >=ΓÇ▓ 64
+  require _to == _to
+  require _approved == _approved
+  if caller - this.address:
+      if not caller - _to:
+          revert with 0, 'ERC721: approve to caller'
+      stor5[caller][addr(_to)] = uint8(_approved)
+      log ApprovalForAll(
+            address owner=_approved,
+            address operator=caller,
+            bool approved=_to)
+  else:
+      mem[96] = calldata.size
+      mem[128 len calldata.size] = call.data[0 len calldata.size]
+      if not mem[calldata.size + 108 len 20] - _to:
+          revert with 0, 'ERC721: approve to caller'
+      stor5[mem[calldata.size + 108 len 20]][addr(_to)] = uint8(_approved)
+      log ApprovalForAll(
+            address owner=_approved,
+            address operator=mem[calldata.size + 108 len 20],
+            bool approved=_to)
+
+def unknown755edd17(uint256 _param1) payable: 
+  require calldata.size - 4 >=ΓÇ▓ 32
+  require _param1 == addr(_param1)
+  if stor7 >= 10000:
+      revert with 0, 'Max supply reached'
+  stor7++
+  if not addr(_param1):
+      revert with 0, 'ERC721: mint to the zero address'
+  if ownerOf[stor7]:
+      revert with 0, 'ERC721: token already minted'
+  if balanceOf[addr(_param1)] > -2:
+      revert with 'NH{q', 17
+  balanceOf[addr(_param1)]++
+  ownerOf[stor7] = addr(_param1)
+  log Transfer(
+        address from=0,
+        address to=addr(_param1),
+        uint256 tokens=stor7)
+  if ext_code.size(addr(_param1)) > 0:
+      if caller - this.address:
+          call addr(_param1).onERC721Received(address operator, address from, uint256 childTokenId, bytes data) with:
+               gas gas_remaining wei
+              args 0, uint32(caller), 0, stor7, 128, 0
+      else:
+          mem[128] = calldata.size
+          mem[160 len calldata.size] = call.data[0 len calldata.size]
+          call addr(_param1).onERC721Received(address operator, address from, uint256 childTokenId, bytes data) with:
+               gas gas_remaining wei
+              args mem[calldata.size + 140 len 20], 0, stor7, 128, 0
+      if not ext_call.success:
+          if not return_data.size:
+              revert with 0, 'ERC721: transfer to non ERC721Receiver implementer'
+          if not return_data.size:
+              revert with 0, 'ERC721: transfer to non ERC721Receiver implementer'
+          revert with ext_call.return_data[0 len return_data.size]
+      require return_data.size >=ΓÇ▓ 32
+      require ext_call.return_data == Mask(32, 224, ext_call.return_data[0])
+      if Mask(32, 224, ext_call.return_data[0]) != 0x150b7a0200000000000000000000000000000000000000000000000000000000:
+          revert with 0, 'ERC721: transfer to non ERC721Receiver implementer'
+  return stor7
+
+def setBaseTokenURI(string _param1): # not payable
+  require calldata.size - 4 >=ΓÇ▓ 32
+  require _param1 <= 18446744073709551615
+  require _param1 + 35 <ΓÇ▓ calldata.size
+  if _param1.length > 18446744073709551615:
+      revert with 'NH{q', 65
+  if ceil32(ceil32(_param1.length)) + 97 > 18446744073709551615 or ceil32(ceil32(_param1.length)) + 97 < 96:
+      revert with 'NH{q', 65
+  require _param1 + _param1.length + 36 <= calldata.size
+  mem[128 len _param1.length] = _param1[all]
+  mem[_param1.length + 128] = 0
+  if caller - this.address:
+      if owner != caller:
+          revert with 0, 'Ownable: caller is not the owner'
+  else:
+      mem[ceil32(ceil32(_param1.length)) + 97] = calldata.size
+      mem[ceil32(ceil32(_param1.length)) + 129 len calldata.size] = call.data[0 len calldata.size]
+      if owner != mem[ceil32(ceil32(_param1.length)) + calldata.size + 109 len 20]:
+          revert with 0, 'Ownable: caller is not the owner'
+  if bool(stor8.length):
+      if not bool(stor8.length) - (stor8.length.field_1 < 32):
+          revert with 'NH{q', 34
+      if _param1.length:
+          stor8[].field_0 = Array(len=_param1.length, data=_param1[all])
+      else:
+          stor8.length = 0
+          idx = 0
+          while stor8.length.field_1 + 31 / 32 > idx:
+              stor8[idx].field_0 = 0
+              idx = idx + 1
+              continue 
+  else:
+      if not bool(stor8.length) - (stor8.length.field_1 < 32):
+          revert with 'NH{q', 34
+      if _param1.length:
+          stor8[].field_0 = Array(len=_param1.length, data=_param1[all])
+      else:
+          stor8.length = 0
+          idx = 0
+          while stor8.length.field_1 + 31 / 32 > idx:
+              stor8[idx].field_0 = 0
+              idx = idx + 1
+              continue 
+
+def approve(address _spender, uint256 _value): # not payable
+  require calldata.size - 4 >=ΓÇ▓ 64
+  require _spender == _spender
+  require _value == _value
+  if not ownerOf[_value]:
+      revert with 0x8c379a000000000000000000000000000000000000000000000000000000000, 'ERC721: owner query for nonexistent token'
+  if not _spender - ownerOf[_value]:
+      revert with 0x8c379a000000000000000000000000000000000000000000000000000000000, 'ERC721: approval to current owner'
+  if caller - this.address:
+      if caller == ownerOf[_value]:
+          approved[_value] = _spender
+          if not ownerOf[_value]:
+              revert with 0x8c379a000000000000000000000000000000000000000000000000000000000, 'ERC721: owner query for nonexistent token'
+      else:
+          if caller - this.address:
+              if caller - 0x58807bad0b376efc12f5ad86aac70e78ed67deae:
+                  if not stor5[stor2[_value]][caller]:
+                      revert with 0x8c379a000000000000000000000000000000000000000000000000000000000, 
+                                  'ERC721: approve caller is not owner nor approved for all'
+              approved[_value] = _spender
+              if not ownerOf[_value]:
+                  revert with 0x8c379a000000000000000000000000000000000000000000000000000000000, 'ERC721: owner query for nonexistent token'
+          else:
+              mem[96] = calldata.size
+              mem[128 len calldata.size] = call.data[0 len calldata.size]
+              if mem[calldata.size + 108 len 20] - 0x58807bad0b376efc12f5ad86aac70e78ed67deae:
+                  if not stor5[stor2[_value]][addr(mem[calldata.size + 96])]:
+                      revert with 0, 'ERC721: approve caller is not owner nor approved for all'
+              approved[_value] = _spender
+              if not ownerOf[_value]:
+                  revert with 0, 'ERC721: owner query for nonexistent token'
+  else:
+      mem[96] = calldata.size
+      mem[128 len calldata.size] = call.data[0 len calldata.size]
+      if mem[calldata.size + 108 len 20] != ownerOf[_value]:
+          if caller - this.address:
+              if caller - 0x58807bad0b376efc12f5ad86aac70e78ed67deae:
+                  if not stor5[stor2[_value]][caller]:
+                      revert with 0, 'ERC721: approve caller is not owner nor approved for all'
+          else:
+              mem[ceil32(calldata.size) + 128] = calldata.size
+              mem[ceil32(calldata.size) + 160 len calldata.size] = call.data[0 len calldata.size]
+              if mem[ceil32(calldata.size) + calldata.size + 140 len 20] - 0x58807bad0b376efc12f5ad86aac70e78ed67deae:
+                  if not stor5[stor2[_value]][addr(mem[ceil32(calldata.size) + calldata.size + 128])]:
+                      revert with 0, 'ERC721: approve caller is not owner nor approved for all'
+      approved[_value] = _spender
+      if not ownerOf[_value]:
+          revert with 0, 'ERC721: owner query for nonexistent token'
+  ('bool', ('stor', ('map', ('param', '_value'), ('name', 'ownerOf', 2))))
+  log Approval(
+        address tokenOwner=ownerOf[_value],
+        address spender=_spender,
+        uint256 tokens=_value)
+
+def transferFrom(address _from, address _to, uint256 _value): # not payable
+  require calldata.size - 4 >=ΓÇ▓ 96
+  require _from == _from
+  require _to == _to
+  require _value == _value
+  if caller - this.address:
+      if not ownerOf[_value]:
+          revert with 0x8c379a000000000000000000000000000000000000000000000000000000000, 'ERC721: operator query for nonexistent token'
+      if not ownerOf[_value]:
+          revert with 0x8c379a000000000000000000000000000000000000000000000000000000000, 'ERC721: owner query for nonexistent token'
+      if ownerOf[_value] != caller:
+          if caller - 0x58807bad0b376efc12f5ad86aac70e78ed67deae:
+              if not stor5[stor2[_value]][caller]:
+                  if not ownerOf[_value]:
+                      revert with 0x8c379a000000000000000000000000000000000000000000000000000000000, 'ERC721: approved query for nonexistent token'
+                  if approved[_value] != caller:
+                      revert with 0x8c379a000000000000000000000000000000000000000000000000000000000, 'ERC721: transfer caller is not owner nor approved'
+      if not ownerOf[_value]:
+          revert with 0x8c379a000000000000000000000000000000000000000000000000000000000, 'ERC721: owner query for nonexistent token'
+      if ownerOf[_value] != _from:
+          revert with 0x8c379a000000000000000000000000000000000000000000000000000000000, 'ERC721: transfer from incorrect owner'
+      if not _to:
+          revert with 0x8c379a000000000000000000000000000000000000000000000000000000000, 'ERC721: transfer to the zero address'
+      approved[_value] = 0
+      if not ownerOf[_value]:
+          revert with 0x8c379a000000000000000000000000000000000000000000000000000000000, 'ERC721: owner query for nonexistent token'
+  else:
+      mem[96] = calldata.size
+      mem[128 len calldata.size] = call.data[0 len calldata.size]
+      if not ownerOf[_value]:
+          revert with 0, 'ERC721: operator query for nonexistent token'
+      if not ownerOf[_value]:
+          revert with 0, 'ERC721: owner query for nonexistent token'
+      if mem[calldata.size + 108 len 20] != ownerOf[_value]:
+          if mem[calldata.size + 108 len 20] - 0x58807bad0b376efc12f5ad86aac70e78ed67deae:
+              if not stor5[stor2[_value]][addr(mem[calldata.size + 96])]:
+                  if not ownerOf[_value]:
+                      revert with 0, 'ERC721: approved query for nonexistent token'
+                  if approved[_value] != mem[calldata.size + 108 len 20]:
+                      revert with 0, 'ERC721: transfer caller is not owner nor approved'
+      if not ownerOf[_value]:
+          revert with 0, 'ERC721: owner query for nonexistent token'
+      if ownerOf[_value] != _from:
+          revert with 0, 'ERC721: transfer from incorrect owner'
+      if not _to:
+          revert with 0, 'ERC721: transfer to the zero address'
+      approved[_value] = 0
+      if not ownerOf[_value]:
+          revert with 0, 'ERC721: owner query for nonexistent token'
+  ('bool', ('stor', ('map', ('param', '_value'), ('name', 'ownerOf', 2))))
+  log Approval(
+        address tokenOwner=ownerOf[_value],
+        address spender=0,
+        uint256 tokens=_value)
+  if balanceOf[addr(_from)] < 1:
+      revert with 'NH{q', 17
+  balanceOf[addr(_from)]--
+  if balanceOf[addr(_to)] > -2:
+      revert with 'NH{q', 17
+  balanceOf[addr(_to)]++
+  ownerOf[_value] = _to
+  log Transfer(
+        address from=_from,
+        address to=_to,
+        uint256 tokens=_value)
+
+def name(): # not payable
+  if bool(stor0.length):
+      if not bool(stor0.length) - (stor0.length.field_1 < 32):
+          revert with 'NH{q', 34
+      if bool(stor0.length):
+          if not bool(stor0.length) - (stor0.length.field_1 < 32):
+              revert with 'NH{q', 34
+          if stor0.length.field_1:
+              if 31 < stor0.length.field_1:
+                  mem[128] = uint256(stor0.field_0)
+                  idx = 128
+                  s = 0
+                  while stor0.length.field_1 + 96 > idx:
+                      mem[idx + 32] = stor0[s].field_256
+                      idx = idx + 32
+                      s = s + 1
+                      continue 
+                  return Array(len=2 * Mask(256, -1, stor0.length.field_1), data=mem[128 len ceil32(stor0.length.field_1)])
+              mem[128] = 256 * stor0.length.field_8
+      else:
+          if not bool(stor0.length) - (stor0.length.field_1 < 32):
+              revert with 'NH{q', 34
+          if stor0.length.field_1:
+              if 31 < stor0.length.field_1:
+                  mem[128] = uint256(stor0.field_0)
+                  idx = 128
+                  s = 0
+                  while stor0.length.field_1 + 96 > idx:
+                      mem[idx + 32] = stor0[s].field_256
+                      idx = idx + 32
+                      s = s + 1
+                      continue 
+                  return Array(len=2 * Mask(256, -1, stor0.length.field_1), data=mem[128 len ceil32(stor0.length.field_1)])
+              mem[128] = 256 * stor0.length.field_8
+      mem[ceil32(stor0.length.field_1) + 192 len ceil32(stor0.length.field_1)] = mem[128 len ceil32(stor0.length.field_1)]
+      if ceil32(stor0.length.field_1) > stor0.length.field_1:
+          mem[ceil32(stor0.length.field_1) + stor0.length.field_1 + 192] = 0
+      return Array(len=2 * Mask(256, -1, stor0.length.field_1), data=mem[128 len ceil32(stor0.length.field_1)], mem[(2 * ceil32(stor0.length.field_1)) + 192 len 2 * ceil32(stor0.length.field_1)]), 
+  if not bool(stor0.length) - (stor0.length.field_1 < 32):
+      revert with 'NH{q', 34
+  if bool(stor0.length):
+      if not bool(stor0.length) - (stor0.length.field_1 < 32):
+          revert with 'NH{q', 34
+      if stor0.length.field_1:
+          if 31 < stor0.length.field_1:
+              mem[128] = uint256(stor0.field_0)
+              idx = 128
+              s = 0
+              while stor0.length.field_1 + 96 > idx:
+                  mem[idx + 32] = stor0[s].field_256
+                  idx = idx + 32
+                  s = s + 1
+                  continue 
+              return Array(len=stor0.length % 128, data=mem[128 len ceil32(stor0.length.field_1)])
+          mem[128] = 256 * stor0.length.field_8
+  else:
+      if not bool(stor0.length) - (stor0.length.field_1 < 32):
+          revert with 'NH{q', 34
+      if stor0.length.field_1:
+          if 31 < stor0.length.field_1:
+              mem[128] = uint256(stor0.field_0)
+              idx = 128
+              s = 0
+              while stor0.length.field_1 + 96 > idx:
+                  mem[idx + 32] = stor0[s].field_256
+                  idx = idx + 32
+                  s = s + 1
+                  continue 
+              return Array(len=stor0.length % 128, data=mem[128 len ceil32(stor0.length.field_1)])
+          mem[128] = 256 * stor0.length.field_8
+  mem[ceil32(stor0.length.field_1) + 192 len ceil32(stor0.length.field_1)] = mem[128 len ceil32(stor0.length.field_1)]
+  if ceil32(stor0.length.field_1) > stor0.length.field_1:
+      mem[ceil32(stor0.length.field_1) + stor0.length.field_1 + 192] = 0
+  return Array(len=stor0.length % 128, data=mem[128 len ceil32(stor0.length.field_1)], mem[(2 * ceil32(stor0.length.field_1)) + 192 len 2 * ceil32(stor0.length.field_1)]), 
+
+def symbol(): # not payable
+  if bool(stor1.length):
+      if not bool(stor1.length) - (stor1.length.field_1 < 32):
+          revert with 'NH{q', 34
+      if bool(stor1.length):
+          if not bool(stor1.length) - (stor1.length.field_1 < 32):
+              revert with 'NH{q', 34
+          if stor1.length.field_1:
+              if 31 < stor1.length.field_1:
+                  mem[128] = uint256(stor1.field_0)
+                  idx = 128
+                  s = 0
+                  while stor1.length.field_1 + 96 > idx:
+                      mem[idx + 32] = stor1[s].field_256
+                      idx = idx + 32
+                      s = s + 1
+                      continue 
+                  return Array(len=2 * Mask(256, -1, stor1.length.field_1), data=mem[128 len ceil32(stor1.length.field_1)])
+              mem[128] = 256 * stor1.length.field_8
+      else:
+          if not bool(stor1.length) - (stor1.length.field_1 < 32):
+              revert with 'NH{q', 34
+          if stor1.length.field_1:
+              if 31 < stor1.length.field_1:
+                  mem[128] = uint256(stor1.field_0)
+                  idx = 128
+                  s = 0
+                  while stor1.length.field_1 + 96 > idx:
+                      mem[idx + 32] = stor1[s].field_256
+                      idx = idx + 32
+                      s = s + 1
+                      continue 
+                  return Array(len=2 * Mask(256, -1, stor1.length.field_1), data=mem[128 len ceil32(stor1.length.field_1)])
+              mem[128] = 256 * stor1.length.field_8
+      mem[ceil32(stor1.length.field_1) + 192 len ceil32(stor1.length.field_1)] = mem[128 len ceil32(stor1.length.field_1)]
+      if ceil32(stor1.length.field_1) > stor1.length.field_1:
+          mem[ceil32(stor1.length.field_1) + stor1.length.field_1 + 192] = 0
+      return Array(len=2 * Mask(256, -1, stor1.length.field_1), data=mem[128 len ceil32(stor1.length.field_1)], mem[(2 * ceil32(stor1.length.field_1)) + 192 len 2 * ceil32(stor1.length.field_1)]), 
+  if not bool(stor1.length) - (stor1.length.field_1 < 32):
+      revert with 'NH{q', 34
+  if bool(stor1.length):
+      if not bool(stor1.length) - (stor1.length.field_1 < 32):
+          revert with 'NH{q', 34
+      if stor1.length.field_1:
+          if 31 < stor1.length.field_1:
+              mem[128] = uint256(stor1.field_0)
+              idx = 128
+              s = 0
+              while stor1.length.field_1 + 96 > idx:
+                  mem[idx + 32] = stor1[s].field_256
+                  idx = idx + 32
+                  s = s + 1
+                  continue 
+              return Array(len=stor1.length % 128, data=mem[128 len ceil32(stor1.length.field_1)])
+          mem[128] = 256 * stor1.length.field_8
+  else:
+      if not bool(stor1.length) - (stor1.length.field_1 < 32):
+          revert with 'NH{q', 34
+      if stor1.length.field_1:
+          if 31 < stor1.length.field_1:
+              mem[128] = uint256(stor1.field_0)
+              idx = 128
+              s = 0
+              while stor1.length.field_1 + 96 > idx:
+                  mem[idx + 32] = stor1[s].field_256
+                  idx = idx + 32
+                  s = s + 1
+                  continue 
+              return Array(len=stor1.length % 128, data=mem[128 len ceil32(stor1.length.field_1)])
+          mem[128] = 256 * stor1.length.field_8
+  mem[ceil32(stor1.length.field_1) + 192 len ceil32(stor1.length.field_1)] = mem[128 len ceil32(stor1.length.field_1)]
+  if ceil32(stor1.length.field_1) > stor1.length.field_1:
+      mem[ceil32(stor1.length.field_1) + stor1.length.field_1 + 192] = 0
+  return Array(len=stor1.length % 128, data=mem[128 len ceil32(stor1.length.field_1)], mem[(2 * ceil32(stor1.length.field_1)) + 192 len 2 * ceil32(stor1.length.field_1)]), 
+
+def unknownd547cfb7(): # not payable
+  if bool(stor8.length):
+      if not bool(stor8.length) - (stor8.length.field_1 < 32):
+          revert with 'NH{q', 34
+      if bool(stor8.length):
+          if not bool(stor8.length) - (stor8.length.field_1 < 32):
+              revert with 'NH{q', 34
+          if stor8.length.field_1:
+              if 31 < stor8.length.field_1:
+                  mem[128] = uint256(stor8.field_0)
+                  idx = 128
+                  s = 0
+                  while stor8.length.field_1 + 96 > idx:
+                      mem[idx + 32] = stor8[s].field_256
+                      idx = idx + 32
+                      s = s + 1
+                      continue 
+                  return Array(len=2 * Mask(256, -1, stor8.length.field_1), data=mem[128 len ceil32(stor8.length.field_1)])
+              mem[128] = 256 * stor8.length.field_8
+      else:
+          if not bool(stor8.length) - (stor8.length.field_1 < 32):
+              revert with 'NH{q', 34
+          if stor8.length.field_1:
+              if 31 < stor8.length.field_1:
+                  mem[128] = uint256(stor8.field_0)
+                  idx = 128
+                  s = 0
+                  while stor8.length.field_1 + 96 > idx:
+                      mem[idx + 32] = stor8[s].field_256
+                      idx = idx + 32
+                      s = s + 1
+                      continue 
+                  return Array(len=2 * Mask(256, -1, stor8.length.field_1), data=mem[128 len ceil32(stor8.length.field_1)])
+              mem[128] = 256 * stor8.length.field_8
+      mem[ceil32(stor8.length.field_1) + 192 len ceil32(stor8.length.field_1)] = mem[128 len ceil32(stor8.length.field_1)]
+      if ceil32(stor8.length.field_1) > stor8.length.field_1:
+          mem[ceil32(stor8.length.field_1) + stor8.length.field_1 + 192] = 0
+      return Array(len=2 * Mask(256, -1, stor8.length.field_1), data=mem[128 len ceil32(stor8.length.field_1)], mem[(2 * ceil32(stor8.length.field_1)) + 192 len 2 * ceil32(stor8.length.field_1)]), 
+  if not bool(stor8.length) - (stor8.length.field_1 < 32):
+      revert with 'NH{q', 34
+  if bool(stor8.length):
+      if not bool(stor8.length) - (stor8.length.field_1 < 32):
+          revert with 'NH{q', 34
+      if stor8.length.field_1:
+          if 31 < stor8.length.field_1:
+              mem[128] = uint256(stor8.field_0)
+              idx = 128
+              s = 0
+              while stor8.length.field_1 + 96 > idx:
+                  mem[idx + 32] = stor8[s].field_256
+                  idx = idx + 32
+                  s = s + 1
+                  continue 
+              return Array(len=stor8.length % 128, data=mem[128 len ceil32(stor8.length.field_1)])
+          mem[128] = 256 * stor8.length.field_8
+  else:
+      if not bool(stor8.length) - (stor8.length.field_1 < 32):
+          revert with 'NH{q', 34
+      if stor8.length.field_1:
+          if 31 < stor8.length.field_1:
+              mem[128] = uint256(stor8.field_0)
+              idx = 128
+              s = 0
+              while stor8.length.field_1 + 96 > idx:
+                  mem[idx + 32] = stor8[s].field_256
+                  idx = idx + 32
+                  s = s + 1
+                  continue 
+              return Array(len=stor8.length % 128, data=mem[128 len ceil32(stor8.length.field_1)])
+          mem[128] = 256 * stor8.length.field_8
+  mem[ceil32(stor8.length.field_1) + 192 len ceil32(stor8.length.field_1)] = mem[128 len ceil32(stor8.length.field_1)]
+  if ceil32(stor8.length.field_1) > stor8.length.field_1:
+      mem[ceil32(stor8.length.field_1) + stor8.length.field_1 + 192] = 0
+  return Array(len=stor8.length % 128, data=mem[128 len ceil32(stor8.length.field_1)], mem[(2 * ceil32(stor8.length.field_1)) + 192 len 2 * ceil32(stor8.length.field_1)]), 
+
+def safeTransferFrom(address _from, address _to, uint256 _tokenId): # not payable
+  require calldata.size - 4 >=ΓÇ▓ 96
+  require _from == _from
+  require _to == _to
+  require _tokenId == _tokenId
+  if caller - this.address:
+      if not ownerOf[_tokenId]:
+          revert with 0, 'ERC721: operator query for nonexistent token'
+      if not ownerOf[_tokenId]:
+          revert with 0, 'ERC721: owner query for nonexistent token'
+      if ownerOf[_tokenId] != caller:
+          if caller - 0x58807bad0b376efc12f5ad86aac70e78ed67deae:
+              if not stor5[stor2[_tokenId]][caller]:
+                  if not ownerOf[_tokenId]:
+                      revert with 0, 'ERC721: approved query for nonexistent token'
+                  if approved[_tokenId] != caller:
+                      revert with 0, 'ERC721: transfer caller is not owner nor approved'
+      if not ownerOf[_tokenId]:
+          revert with 0, 'ERC721: owner query for nonexistent token'
+      if ownerOf[_tokenId] != _from:
+          revert with 0, 'ERC721: transfer from incorrect owner'
+      if not _to:
+          revert with 0, 'ERC721: transfer to the zero address'
+      approved[_tokenId] = 0
+      if not ownerOf[_tokenId]:
+          revert with 0, 'ERC721: owner query for nonexistent token'
+      log Approval(
+            address tokenOwner=ownerOf[_tokenId],
+            address spender=0,
+            uint256 tokens=_tokenId)
+      if balanceOf[addr(_from)] < 1:
+          revert with 'NH{q', 17
+      balanceOf[addr(_from)]--
+      if balanceOf[addr(_to)] > -2:
+          revert with 'NH{q', 17
+      balanceOf[addr(_to)]++
+      ownerOf[_tokenId] = _to
+      log Transfer(
+            address from=_from,
+            address to=_to,
+            uint256 tokens=_tokenId)
+      if ext_code.size(_to) > 0:
+          if caller - this.address:
+              call _to.onERC721Received(address operator, address from, uint256 childTokenId, bytes data) with:
+                   gas gas_remaining wei
+                  args 0, uint32(caller), addr(_from), _tokenId, 128, 0
+          else:
+              mem[128] = calldata.size
+              mem[160 len calldata.size] = call.data[0 len calldata.size]
+              call _to.onERC721Received(address operator, address from, uint256 childTokenId, bytes data) with:
+                   gas gas_remaining wei
+                  args mem[calldata.size + 140 len 20], addr(_from), _tokenId, 128, 0
+          if not ext_call.success:
+              if not return_data.size:
+                  revert with 0, 'ERC721: transfer to non ERC721Receiver implementer'
+              if not return_data.size:
+                  revert with 0, 'ERC721: transfer to non ERC721Receiver implementer'
+              revert with ext_call.return_data[0 len return_data.size]
+          require return_data.size >=ΓÇ▓ 32
+          require ext_call.return_data == Mask(32, 224, ext_call.return_data[0])
+          if Mask(32, 224, ext_call.return_data[0]) != 0x150b7a0200000000000000000000000000000000000000000000000000000000:
+              revert with 0, 'ERC721: transfer to non ERC721Receiver implementer'
+  else:
+      mem[128] = calldata.size
+      mem[160 len calldata.size] = call.data[0 len calldata.size]
+      if not ownerOf[_tokenId]:
+          revert with 0, 'ERC721: operator query for nonexistent token'
+      if not ownerOf[_tokenId]:
+          revert with 0, 'ERC721: owner query for nonexistent token'
+      if mem[calldata.size + 140 len 20] != ownerOf[_tokenId]:
+          if mem[calldata.size + 140 len 20] - 0x58807bad0b376efc12f5ad86aac70e78ed67deae:
+              if not stor5[stor2[_tokenId]][addr(mem[calldata.size + 128])]:
+                  if not ownerOf[_tokenId]:
+                      revert with 0, 'ERC721: approved query for nonexistent token'
+                  if approved[_tokenId] != mem[calldata.size + 140 len 20]:
+                      revert with 0, 'ERC721: transfer caller is not owner nor approved'
+      if not ownerOf[_tokenId]:
+          revert with 0, 'ERC721: owner query for nonexistent token'
+      if ownerOf[_tokenId] != _from:
+          revert with 0, 'ERC721: transfer from incorrect owner'
+      if not _to:
+          revert with 0, 'ERC721: transfer to the zero address'
+      approved[_tokenId] = 0
+      if not ownerOf[_tokenId]:
+          revert with 0, 'ERC721: owner query for nonexistent token'
+      log Approval(
+            address tokenOwner=ownerOf[_tokenId],
+            address spender=0,
+            uint256 tokens=_tokenId)
+      if balanceOf[addr(_from)] < 1:
+          revert with 'NH{q', 17
+      balanceOf[addr(_from)]--
+      if balanceOf[addr(_to)] > -2:
+          revert with 'NH{q', 17
+      balanceOf[addr(_to)]++
+      ownerOf[_tokenId] = _to
+      log Transfer(
+            address from=_from,
+            address to=_to,
+            uint256 tokens=_tokenId)
+      if ext_code.size(_to) > 0:
+          if caller - this.address:
+              call _to.onERC721Received(address operator, address from, uint256 childTokenId, bytes data) with:
+                   gas gas_remaining wei
+                  args caller, addr(_from), _tokenId, 128, 0
+          else:
+              mem[ceil32(calldata.size) + 160] = calldata.size
+              mem[ceil32(calldata.size) + 192 len calldata.size] = call.data[0 len calldata.size]
+              mem[(2 * ceil32(calldata.size)) + 228] = _from
+              mem[(2 * ceil32(calldata.size)) + 260] = _tokenId
+              mem[(2 * ceil32(calldata.size)) + 292] = 128
+              mem[(2 * ceil32(calldata.size)) + 324] = 0
+              mem[(2 * ceil32(calldata.size)) + 356 len 0] = None
+              call _to.onERC721Received(address operator, address from, uint256 childTokenId, bytes data) with:
+                   gas gas_remaining wei
+                  args mem[ceil32(calldata.size) + calldata.size + 172 len 20], addr(_from), _tokenId, 128, 0
+          if not ext_call.success:
+              if not return_data.size:
+                  revert with 0, 'ERC721: transfer to non ERC721Receiver implementer'
+              if not return_data.size:
+                  revert with 0, 'ERC721: transfer to non ERC721Receiver implementer'
+              revert with ext_call.return_data[0 len return_data.size]
+          require return_data.size >=ΓÇ▓ 32
+          require ext_call.return_data == Mask(32, 224, ext_call.return_data[0])
+          if Mask(32, 224, ext_call.return_data[0]) != 0x150b7a0200000000000000000000000000000000000000000000000000000000:
+              revert with 0, 'ERC721: transfer to non ERC721Receiver implementer'
+
+def tokenURI(uint256 _tokenId): # not payable
+  require calldata.size - 4 >=ΓÇ▓ 32
+  require _tokenId == _tokenId
+  if not ownerOf[_tokenId]:
+      revert with 0x8c379a000000000000000000000000000000000000000000000000000000000, 'ERC721Metadata: URI query for nonexistent token'
+  if bool(stor8.length):
+      if not bool(stor8.length) - (stor8.length.field_1 < 32):
+          revert with 'NH{q', 34
+      if bool(stor8.length):
+          if not bool(stor8.length) - (stor8.length.field_1 < 32):
+              revert with 'NH{q', 34
+          if not stor8.length.field_1:
+              if stor8.length.field_1 <= 0:
+                  return ''
+              if _tokenId:
+                  s = 0
+                  idx = _tokenId
+                  while idx:
+                      if not s - 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff:
+                          revert with 'NH{q', 17
+                      s = s + 1
+                      idx = idx / 10
+                      continue 
+                  if s > 18446744073709551615:
+                      revert with 'NH{q', 65
+          else:
+              if 31 < stor8.length.field_1:
+                  idx = 128
+                  s = 0
+                  while stor8.length.field_1 + 96 > idx:
+                      mem[idx + 32] = stor8[s].field_256
+                      idx = idx + 32
+                      s = s + 1
+                      continue 
+                  if stor8.length.field_1 > 0:
+              else:
+                  if stor8.length.field_1 <= 0:
+                      return ''
+                  if _tokenId:
+                      s = 0
+                      idx = _tokenId
+                      while idx:
+                          if not s - 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff:
+                              revert with 'NH{q', 17
+                          s = s + 1
+                          idx = idx / 10
+                          continue 
+                      if s > 18446744073709551615:
+                          revert with 'NH{q', 65
+      else:
+          if not bool(stor8.length) - (stor8.length.field_1 < 32):
+              revert with 'NH{q', 34
+          if not stor8.length.field_1:
+              if stor8.length.field_1 <= 0:
+                  return ''
+              if _tokenId:
+                  s = 0
+                  idx = _tokenId
+                  while idx:
+                      if not s - 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff:
+                          revert with 'NH{q', 17
+                      s = s + 1
+                      idx = idx / 10
+                      continue 
+                  if s > 18446744073709551615:
+                      revert with 'NH{q', 65
+          else:
+              if 31 < stor8.length.field_1:
+                  idx = 128
+                  s = 0
+                  while stor8.length.field_1 + 96 > idx:
+                      mem[idx + 32] = stor8[s].field_256
+                      idx = idx + 32
+                      s = s + 1
+                      continue 
+                  if stor8.length.field_1 > 0:
+              else:
+                  if stor8.length.field_1 <= 0:
+                      return ''
+                  if _tokenId:
+                      s = 0
+                      idx = _tokenId
+                      while idx:
+                          if not s - 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff:
+                              revert with 'NH{q', 17
+                          s = s + 1
+                          idx = idx / 10
+                          continue 
+                      if s > 18446744073709551615:
+                          revert with 'NH{q', 65
+  else:
+      if not bool(stor8.length) - (stor8.length.field_1 < 32):
+          revert with 'NH{q', 34
+      if bool(stor8.length):
+          if not bool(stor8.length) - (stor8.length.field_1 < 32):
+              revert with 'NH{q', 34
+          if not stor8.length.field_1:
+              if stor8.length.field_1 <= 0:
+                  return ''
+              if _tokenId:
+                  s = 0
+                  idx = _tokenId
+                  while idx:
+                      if not s - 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff:
+                          revert with 'NH{q', 17
+                      s = s + 1
+                      idx = idx / 10
+                      continue 
+                  if s > 18446744073709551615:
+                      revert with 'NH{q', 65
+          else:
+              if 31 < stor8.length.field_1:
+                  idx = 128
+                  s = 0
+                  while stor8.length.field_1 + 96 > idx:
+                      mem[idx + 32] = stor8[s].field_256
+                      idx = idx + 32
+                      s = s + 1
+                      continue 
+                  if stor8.length.field_1 > 0:
+              else:
+                  if stor8.length.field_1 <= 0:
+                      return ''
+                  if _tokenId:
+                      s = 0
+                      idx = _tokenId
+                      while idx:
+                          if not s - 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff:
+                              revert with 'NH{q', 17
+                          s = s + 1
+                          idx = idx / 10
+                          continue 
+                      if s > 18446744073709551615:
+                          revert with 'NH{q', 65
+      else:
+          if not bool(stor8.length) - (stor8.length.field_1 < 32):
+              revert with 'NH{q', 34
+          if not stor8.length.field_1:
+              if stor8.length.field_1 <= 0:
+                  return ''
+              if _tokenId:
+                  s = 0
+                  idx = _tokenId
+                  while idx:
+                      if not s - 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff:
+                          revert with 'NH{q', 17
+                      s = s + 1
+                      idx = idx / 10
+                      continue 
+                  if s > 18446744073709551615:
+                      revert with 'NH{q', 65
+          else:
+              if 31 < stor8.length.field_1:
+                  idx = 128
+                  s = 0
+                  while stor8.length.field_1 + 96 > idx:
+                      mem[idx + 32] = stor8[s].field_256
+                      idx = idx + 32
+                      s = s + 1
+                      continue 
+                  if stor8.length.field_1 > 0:
+              else:
+                  if stor8.length.field_1 <= 0:
+                      return ''
+                  if _tokenId:
+                      s = 0
+                      idx = _tokenId
+                      while idx:
+                          if not s - 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff:
+                              revert with 'NH{q', 17
+                          s = s + 1
+                          idx = idx / 10
+                          continue 
+                      if s > 18446744073709551615:
+                          revert with 'NH{q', 65
+  ...  # Decompilation aborted, sorry: ("decompilation didn't finish",)
+
+def safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes _data): # not payable
+  require calldata.size - 4 >=ΓÇ▓ 128
+  require _from == _from
+  require _to == _to
+  require _tokenId == _tokenId
+  require _data <= 18446744073709551615
+  require _data + 35 <ΓÇ▓ calldata.size
+  if _data.length > 18446744073709551615:
+      revert with 'NH{q', 65
+  if ceil32(ceil32(_data.length)) + 97 > 18446744073709551615 or ceil32(ceil32(_data.length)) + 97 < 96:
+      revert with 'NH{q', 65
+  require _data + _data.length + 36 <= calldata.size
+  mem[128 len _data.length] = _data[all]
+  mem[_data.length + 128] = 0
+  if caller - this.address:
+      if not ownerOf[_tokenId]:
+          revert with 0, 'ERC721: operator query for nonexistent token'
+      if not ownerOf[_tokenId]:
+          revert with 0, 'ERC721: owner query for nonexistent token'
+      if ownerOf[_tokenId] != caller:
+          if caller - 0x58807bad0b376efc12f5ad86aac70e78ed67deae:
+              if not stor5[stor2[_tokenId]][caller]:
+                  if not ownerOf[_tokenId]:
+                      revert with 0, 'ERC721: approved query for nonexistent token'
+                  if approved[_tokenId] != caller:
+                      revert with 0, 'ERC721: transfer caller is not owner nor approved'
+      if not ownerOf[_tokenId]:
+          revert with 0, 'ERC721: owner query for nonexistent token'
+      if ownerOf[_tokenId] != _from:
+          revert with 0, 'ERC721: transfer from incorrect owner'
+      if not _to:
+          revert with 0, 'ERC721: transfer to the zero address'
+      approved[_tokenId] = 0
+      if not ownerOf[_tokenId]:
+          revert with 0, 'ERC721: owner query for nonexistent token'
+      log Approval(
+            address tokenOwner=ownerOf[_tokenId],
+            address spender=0,
+            uint256 tokens=_tokenId)
+      if balanceOf[addr(_from)] < 1:
+          revert with 'NH{q', 17
+      balanceOf[addr(_from)]--
+      if balanceOf[addr(_to)] > -2:
+          revert with 'NH{q', 17
+      balanceOf[addr(_to)]++
+      ownerOf[_tokenId] = _to
+      log Transfer(
+            address from=_from,
+            address to=_to,
+            uint256 tokens=_tokenId)
+      if ext_code.size(_to) > 0:
+          if caller - this.address:
+              call _to.onERC721Received(address operator, address from, uint256 childTokenId, bytes data) with:
+                   gas gas_remaining wei
+                  args caller, addr(_from), _tokenId, Array(len=_data.length, data=_data[all])
+          else:
+              mem[ceil32(ceil32(_data.length)) + 97] = calldata.size
+              mem[ceil32(ceil32(_data.length)) + 129 len calldata.size] = call.data[0 len calldata.size]
+              call _to.onERC721Received(address operator, address from, uint256 childTokenId, bytes data) with:
+                   gas gas_remaining wei
+                  args mem[ceil32(ceil32(_data.length)) + calldata.size + 109 len 20], addr(_from), _tokenId, Array(len=_data.length, data=_data[all])
+          if not ext_call.success:
+              if not return_data.size:
+                  if not _data.length:
+                      revert with 0, 'ERC721: transfer to non ERC721Receiver implementer'
+                  revert with _data[all]
+              if not return_data.size:
+                  revert with 0, 'ERC721: transfer to non ERC721Receiver implementer'
+              revert with ext_call.return_data[0 len return_data.size]
+          require return_data.size >=ΓÇ▓ 32
+          require ext_call.return_data == Mask(32, 224, ext_call.return_data[0])
+          if Mask(32, 224, ext_call.return_data[0]) != 0x150b7a0200000000000000000000000000000000000000000000000000000000:
+              revert with 0, 'ERC721: transfer to non ERC721Receiver implementer'
+  else:
+      mem[ceil32(ceil32(_data.length)) + 97] = calldata.size
+      mem[ceil32(ceil32(_data.length)) + 129 len calldata.size] = call.data[0 len calldata.size]
+      if not ownerOf[_tokenId]:
+          revert with 0, 'ERC721: operator query for nonexistent token'
+      if not ownerOf[_tokenId]:
+          revert with 0, 'ERC721: owner query for nonexistent token'
+      if mem[ceil32(ceil32(_data.length)) + calldata.size + 109 len 20] != ownerOf[_tokenId]:
+          if mem[ceil32(ceil32(_data.length)) + calldata.size + 109 len 20] - 0x58807bad0b376efc12f5ad86aac70e78ed67deae:
+              if not stor5[stor2[_tokenId]][addr(mem[ceil32(ceil32(_data.length)) + calldata.size + 97])]:
+                  if not ownerOf[_tokenId]:
+                      revert with 0, 'ERC721: approved query for nonexistent token'
+                  if approved[_tokenId] != mem[ceil32(ceil32(_data.length)) + calldata.size + 109 len 20]:
+                      revert with 0, 'ERC721: transfer caller is not owner nor approved'
+      if not ownerOf[_tokenId]:
+          revert with 0, 'ERC721: owner query for nonexistent token'
+      if ownerOf[_tokenId] != _from:
+          revert with 0, 'ERC721: transfer from incorrect owner'
+      if not _to:
+          revert with 0, 'ERC721: transfer to the zero address'
+      approved[_tokenId] = 0
+      if not ownerOf[_tokenId]:
+          revert with 0, 'ERC721: owner query for nonexistent token'
+      log Approval(
+            address tokenOwner=ownerOf[_tokenId],
+            address spender=0,
+            uint256 tokens=_tokenId)
+      if balanceOf[addr(_from)] < 1:
+          revert with 'NH{q', 17
+      balanceOf[addr(_from)]--
+      if balanceOf[addr(_to)] > -2:
+          revert with 'NH{q', 17
+      balanceOf[addr(_to)]++
+      ownerOf[_tokenId] = _to
+      log Transfer(
+            address from=_from,
+            address to=_to,
+            uint256 tokens=_tokenId)
+      if ext_code.size(_to) > 0:
+          if caller - this.address:
+              call _to.onERC721Received(address operator, address from, uint256 childTokenId, bytes data) with:
+                   gas gas_remaining wei
+                  args caller, addr(_from), _tokenId, Array(len=_data.length, data=_data[all])
+          else:
+              mem[ceil32(ceil32(_data.length)) + ceil32(calldata.size) + 129] = calldata.size
+              mem[ceil32(ceil32(_data.length)) + ceil32(calldata.size) + 161 len calldata.size] = call.data[0 len calldata.size]
+              mem[ceil32(ceil32(_data.length)) + (2 * ceil32(calldata.size)) + 197] = _from
+              mem[ceil32(ceil32(_data.length)) + (2 * ceil32(calldata.size)) + 229] = _tokenId
+              mem[ceil32(ceil32(_data.length)) + (2 * ceil32(calldata.size)) + 261] = 128
+              mem[ceil32(ceil32(_data.length)) + (2 * ceil32(calldata.size)) + 293] = _data.length
+              mem[ceil32(ceil32(_data.length)) + (2 * ceil32(calldata.size)) + 325 len ceil32(_data.length)] = _data[all], Mask(8 * ceil32(_data.length) - _data.length, -(8 * ceil32(_data.length) + -ceil32(ceil32(_data.length)) + 31) + 256, calldata.size) >> -(8 * ceil32(_data.length) + -ceil32(ceil32(_data.length)) + 31) + 256
+              if ceil32(_data.length) > _data.length:
+                  mem[ceil32(ceil32(_data.length)) + (2 * ceil32(calldata.size)) + _data.length + 325] = 0
+              call _to.onERC721Received(address operator, address from, uint256 childTokenId, bytes data) with:
+                   gas gas_remaining wei
+                  args mem[ceil32(ceil32(_data.length)) + ceil32(calldata.size) + calldata.size + 141 len 20], addr(_from), _tokenId, Array(len=_data.length, data=_data[all])
+          if not ext_call.success:
+              if not return_data.size:
+                  if not _data.length:
+                      revert with 0, 'ERC721: transfer to non ERC721Receiver implementer'
+                  revert with _data[all]
+              if not return_data.size:
+                  revert with 0, 'ERC721: transfer to non ERC721Receiver implementer'
+              revert with ext_call.return_data[0 len return_data.size]
+          require return_data.size >=ΓÇ▓ 32
+          require ext_call.return_data == Mask(32, 224, ext_call.return_data[0])
+          if Mask(32, 224, ext_call.return_data[0]) != 0x150b7a0200000000000000000000000000000000000000000000000000000000:
+              revert with 0, 'ERC721: transfer to non ERC721Receiver implementer'
+
+

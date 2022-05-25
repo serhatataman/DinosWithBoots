@@ -1,0 +1,25 @@
+{
+  "name": "dinoswithboots",
+  "version": "1.0.0",
+  "description": "Imagine if the dinosaurs still roamed earth today. How would humans live alongside them? We've got some ideas. This NFT series is created to commemorate the dinosaurs' time in the world and to show you how they would look like if they were among us. We hope you enjoy Dinos with Boots!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "OutsmArt",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.5",
+    "@nomiclabs/hardhat-etherscan": "^3.0.3",
+    "ethers": "^5.0.0",
+    "hardhat": "^2.9.2",
+    "node-fetch": "^2.6.7"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.5.0",
+    "dotenv": "^16.0.0",
+    "solc": "^0.8.4",
+    "truffle": "^5.5.9",
+    "yarn": "^1.22.18"
+  }
+}
